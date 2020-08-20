@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' show radians;
+
 class Hand extends StatelessWidget{
   const Hand({
     @required this.color,
@@ -48,7 +51,7 @@ class _HandPainter extends CustomPainter{
     final linePaint = Paint()
       ..color = color
       ..strokeWidth = thickness
-      ..strokeCap = StrokeCap.square;
+      ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(center,position,linePaint);
   }
@@ -62,3 +65,6 @@ class _HandPainter extends CustomPainter{
   }
 
 }
+
+
+
