@@ -18,9 +18,9 @@ class MyClock extends StatefulWidget{
 class _MyClockState extends State<MyClock>{
   final dialSize = window.physicalSize.width / 4;
   var _curTime = DateTime.now();
-  Timer _timer;
 
-  int _selectedBottomNavigationBarIndex = 0;
+  bool is24HourClock = false;
+  Timer _timer;
 
   @override
   void initState(){
@@ -38,17 +38,32 @@ class _MyClockState extends State<MyClock>{
     });
   }
 
-  void _onBottomNavigationBarTapped(int index){
-    setState(() {
-      _selectedBottomNavigationBarIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text("时钟"),
+        ),
+        drawer: Drawer(
+          child:ListView(
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text("Header"),
+              ),
+              CheckboxListTile(
+                title:Text('24小时计时法'),
+                value: is24HourClock == true,
+                onChanged:(bool value){
+                  setState(() {
+                    is24HourClock = value;
+                  });
+                }
+              ),
+            ]
+          ),
         ),
         body: Center(
             child:Column(
@@ -95,8 +110,9 @@ class _MyClockState extends State<MyClock>{
                 Expanded(
                     child:Center(
                         child:Text(
-                        '${_curTime.hour}时${_curTime.minute}分${_curTime.second}秒',
-                         style: TextStyle(
+                          (is24HourClock == true ? '' : (_curTime.hour > 12 ? '下午' : '上午')) +
+                          '${(is24HourClock == true) ? _curTime.hour : (_curTime.hour % 12)}时${_curTime.minute}分${_curTime.second}秒',
+                          style: TextStyle(
                             color:Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
