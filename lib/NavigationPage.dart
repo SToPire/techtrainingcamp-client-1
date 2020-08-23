@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'ClockPage.dart';
 import 'TimerPage.dart';
+import 'AlarmPage.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   @override
@@ -18,7 +19,8 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget> {
     list
     //TODO: to add the distinctive page and fulfil the extra function
       ..add(MyClock())
-      ..add(MyTimer());
+      ..add(MyTimer())
+      ..add(AlarmPage());
     super.initState();
   }
 
@@ -39,11 +41,20 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               )),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.alarm,
+                Icons.timer,
                 color: _bottomNavigationColor,
               ),
               title: Text(
                 'Timer',
+                style: TextStyle(color: _bottomNavigationColor),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.alarm,
+                color: _bottomNavigationColor,
+              ),
+              title: Text(
+                'Alarm',
                 style: TextStyle(color: _bottomNavigationColor),
               )),
           //TODO: to add more BottomNavigationBarItem
