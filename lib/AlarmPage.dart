@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_sujian_select/flutter_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -141,6 +142,7 @@ class _AlarmPageState extends State<AlarmPage> {
                   ClockDate backdata = new ClockDate(data.chour, data.cmin, data.csec, data.state,data.rept);
                   cdlist.add(backdata);
                   print(cdlist.length);
+                  showAlarm(backdata,cdlist.length);
                   //Isolate.spawn(threadTask, backdata);
                 });
               });
@@ -156,36 +158,30 @@ class _AlarmPageState extends State<AlarmPage> {
     int mark=1;
     while (true){
       var NowT=DateTime.now();
-      if (NowT.hour==cd.chour && NowT.minute==cd.cmin){
+      if (NowT.hour==cd.chour && NowT.minute==cd.cmin && NowT.second==cd.csec){
         mark=0;
-        print({'hhh':cd.cmin});
-        //showTT();
+        //print({'hhh':cd.cmin});
       }
       if (mark==0) break;
     }
   }
-  void showTT(){
+
+  void showAlarm(ClockDate ca,int cdindex) async {
+    await compute(threadTask, ca);
     showDialog(
         context: context,
         builder: (context) =>
             AlertDialog(
-              title: Text('test'),
+              title: Text('闹铃提醒： ${ca.chour}:${ca.cmin}:${ca.csec}'),
             ));
-    setState(() {
-      timeController.clear();
-    });
-  }
-  static Future<void> checkClock() async{
-    var NowT=DateTime.now();
-    print({'Alarm':NowT});
-    print(cdlist.length);
-    for (int i=0;i<cdlist.length;i++) {
-      if (cdlist[i].state==false) continue;
-      if (NowT.hour==cdlist[i].chour && NowT.minute==cdlist[i].cmin){
-        print({'hhhh:'});
-        cdlist[i].state=false;
-      }
+    if (ca.rept==null){
+      print(cdindex);
+      setState(() {
+        cdlist[cdindex-1].state = false;
+      });
     }
+
+
   }
 
 }
@@ -271,7 +267,7 @@ class SecondScreenState extends State<SecondScreen>{
                   SelectItem(label: '周日',value: 7),
                 ],
                 onMultipleSelect: (List<int> value){
-                  print(value);
+                  //print(value);
                   cd.rept=value;
                 },
               ),
