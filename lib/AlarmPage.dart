@@ -24,8 +24,6 @@ List<ClockDate> cdlist = [];
 
 
 class AlarmPage extends StatefulWidget {
-  //AlarmPage({Key key, this.title}) : super(key: key);
-  //final String title;
   @override
   _AlarmPageState createState() => _AlarmPageState();
 }
@@ -43,6 +41,18 @@ class _AlarmPageState extends State<AlarmPage> {
   DateTime selectTime = DateTime.now();
 
   Widget ShowListData(BuildContext context,ClockDate data){
+    String words;
+    if (data.rept==null) words='无重复';
+    else {
+      words = '';
+      if (data.rept.indexOf(1) != -1) words = '${words} 周一';
+      if (data.rept.indexOf(2) != -1) words = '${words} 周二';
+      if (data.rept.indexOf(3) != -1) words = '${words} 周三';
+      if (data.rept.indexOf(4) != -1) words = '${words} 周四';
+      if (data.rept.indexOf(5) != -1) words = '${words} 周五';
+      if (data.rept.indexOf(6) != -1) words = '${words} 周六';
+      if (data.rept.indexOf(7) != -1) words = '${words} 周日';
+    }
     return Container(
       color: Colors.white,
       padding: EdgeInsets.all(15),
@@ -50,7 +60,8 @@ class _AlarmPageState extends State<AlarmPage> {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Icon(Icons.alarm
+            child: Icon(
+              Icons.alarm,
             ),
           ),
           Padding(padding: EdgeInsets.only(left: 15)),
@@ -64,7 +75,7 @@ class _AlarmPageState extends State<AlarmPage> {
                     Text(
                       '${data.chour}:${data.cmin}:${data.csec}',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 26,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF333333),
                       ),
@@ -83,7 +94,7 @@ class _AlarmPageState extends State<AlarmPage> {
                 ),
                 Padding(padding: EdgeInsets.only(top: 2)),
                 Text(
-                  '重复天数：${data.rept}',
+                  '重复天数：$words',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
