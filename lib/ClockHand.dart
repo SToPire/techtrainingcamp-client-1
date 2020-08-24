@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart' show radians;
 
 class Hand extends StatelessWidget{
   const Hand({

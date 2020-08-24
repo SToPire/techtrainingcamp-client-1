@@ -4,8 +4,9 @@ import 'package:vector_math/vector_math_64.dart' show radians;
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'hand.dart';
-import 'dial.dart';
+import 'ClockHand.dart';
+import 'ClockDial.dart';
+import 'WeatherStore.dart';
 
 final radPerTick = radians(360/60);
 final radPerHour = radians(360/12);
@@ -26,9 +27,10 @@ class _MyClockState extends State<MyClock>{
   void initState(){
     super.initState();
     _updateTime();
+    weatherStore.getWeather();
   }
 
-  void _updateTime(){
+  void _updateTime() {
     setState(() {
       _curTime = DateTime.now();
       _timer = Timer(
@@ -36,6 +38,26 @@ class _MyClockState extends State<MyClock>{
         _updateTime,
       );
     });
+  }
+
+  void _selectCity(context){
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context){
+          return Center(
+            heightFactor: 1.5,
+            child:TextField(
+              onSubmitted: (String s){
+                weatherStore.updateCity(s);
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '输入城市名',
+              ),
+            ),
+          );
+        }
+    );
   }
 
   @override
@@ -51,7 +73,12 @@ class _MyClockState extends State<MyClock>{
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
-                child: Text("Header"),
+                child: Text(
+                  '选项',
+                  style: TextStyle(
+                    fontSize: 40,
+                  )
+                ),
               ),
               CheckboxListTile(
                 title:Text('24小时计时法'),
@@ -62,6 +89,13 @@ class _MyClockState extends State<MyClock>{
                   });
                 }
               ),
+              ListTile(
+                title: Text('选择城市'),
+                enabled: true,
+                onTap: (){
+                  _selectCity(context);
+                },
+              ),
             ]
           ),
         ),
@@ -70,6 +104,7 @@ class _MyClockState extends State<MyClock>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
+                  flex:3,
                   child:Center(
                     child:Stack(
                       children:[
@@ -120,6 +155,26 @@ class _MyClockState extends State<MyClock>{
                         )
                     )
                 ),
+                Expanded(
+                  child:Center(
+                      child:Text(
+                          weatherStore.city,
+                          style: TextStyle(
+                            color:Colors.blueAccent,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
+                      )
+                  )
+                ),
+                Expanded(
+                    child:Center(
+                        child:Text(
+                            weatherStore.text + ' ' +
+                                '今日${weatherStore.tempMin}~${weatherStore.tempMax}摄氏度 当前${weatherStore.temp}摄氏度',
+                        )
+                    )
+                ),
               ],
             )
         ),
@@ -134,3 +189,4 @@ class _MyClockState extends State<MyClock>{
     }
   }
 }
+
